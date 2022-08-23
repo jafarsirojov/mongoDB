@@ -13,6 +13,7 @@ import (
 var Module = fx.Provide(NewDB)
 
 type Params struct {
+	fx.In
 	Config *config.Config
 }
 

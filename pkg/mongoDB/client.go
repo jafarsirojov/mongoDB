@@ -12,7 +12,7 @@ var collection *mongo.Collection
 var conf *config.Config
 
 func initClient() {
-	clientOptions := options.Client().ApplyURI(conf.MongoDbUrl)
+	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017/")
 	client, err := mongo.Connect(context.Background(), clientOptions)
 	if err != nil {
 		log.Fatal(err)

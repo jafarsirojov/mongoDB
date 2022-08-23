@@ -10,6 +10,7 @@ import (
 var Module = fx.Provide(New)
 
 type Params struct {
+	fx.In
 	MongoDB mongoDB.MongoDB
 }
 
@@ -17,11 +18,11 @@ type service struct {
 	mongoDB mongoDB.MongoDB
 }
 
-func New(params Params) Record {
+func New(params Params) RecordsService {
 	return &service{mongoDB: params.MongoDB}
 }
 
-type Record interface {
+type RecordsService interface {
 	GetAll(ctx context.Context) (records []structs.Record, err error)
 }
 
