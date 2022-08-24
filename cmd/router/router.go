@@ -23,6 +23,7 @@ func NewRouter(params Params) {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/all", params.RecordsHandler.GetAll).Methods("GET")
+	router.HandleFunc("/delete/{name}", params.RecordsHandler.DeleteByName).Methods("DELETE")
 
 	server := http.Server{
 		Addr:    params.Config.Port,

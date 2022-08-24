@@ -2,6 +2,8 @@ package record
 
 import (
 	"context"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"mongoDB/internal/structs"
@@ -30,6 +32,7 @@ func New(params Params) RecordsService {
 
 type RecordsService interface {
 	GetAll(ctx context.Context) (records []structs.Record, err error)
+	DeleteByName(ctx context.Context, name string) error
 }
 
 func (s *service) GetAll(ctx context.Context) (records []structs.Record, err error) {
@@ -44,4 +47,17 @@ func (s *service) GetAll(ctx context.Context) (records []structs.Record, err err
 	}
 
 	return records, nil
+}
+
+func (s *service) DeleteByName(ctx context.Context, name string) error {
+
+	filter := bson.D{primitive.E{Key: "name", Value: name}}
+
+	err := s.mongoDB.Delete(ctx, filter)
+	if err != nil {
+		s.logger.Error("internal.record.DeleteByID s.mongoDB.Delete", zap.Error(err))
+		return err
+	}
+
+	return nil
 }

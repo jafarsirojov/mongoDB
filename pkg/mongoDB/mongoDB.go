@@ -33,6 +33,7 @@ func NewDB(params Params) MongoDB {
 type MongoDB interface {
 	Add(ctx context.Context, record structs.Record) error
 	GetAll(ctx context.Context, filter interface{}) (records []structs.Record, err error)
+	Delete(ctx context.Context, filter interface{}) error
 }
 
 func (m *mongoDB) Add(ctx context.Context, record structs.Record) error {
@@ -68,4 +69,12 @@ func (m *mongoDB) GetAll(ctx context.Context, filter interface{}) (records []str
 	}
 
 	return records, nil
+}
+func (m *mongoDB) Delete(ctx context.Context, filter interface{}) error {
+	_, err := collection.DeleteOne(ctx, filter)
+	if err != nil {
+		m.logger.Error("pkg.mongoDB.GetAll cur.Decode", zap.Any("filter", filter), zap.Error(err))
+		return err
+	}
+	return nil
 }
