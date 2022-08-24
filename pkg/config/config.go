@@ -11,6 +11,7 @@ import (
 type Config struct {
 	MongoDbUrl string
 	Port       string
+	Version    string
 }
 
 var Module = fx.Options(fx.Provide(ProvideConfig))
@@ -33,5 +34,6 @@ func ProvideConfig() *Config {
 	return &Config{
 		MongoDbUrl: getEnv("MONGO_DB_URL", "mongodb://localhost:27017/"),
 		Port:       getEnv("PORT", ":7777"),
+		Version:    getEnv("VERSION", "1"),
 	}
 }

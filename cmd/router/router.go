@@ -2,9 +2,9 @@ package router
 
 import (
 	"context"
-	"fmt"
 	"github.com/gorilla/mux"
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 	"mongoDB/cmd/handlers"
 	"mongoDB/pkg/config"
 	"net/http"
@@ -16,15 +16,19 @@ type Params struct {
 	fx.In
 	Lifecycle      fx.Lifecycle
 	Config         *config.Config
+	Logger         *zap.Logger
 	RecordsHandler handlers.RecordsHandler
 }
 
 func NewRouter(params Params) {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/all", params.RecordsHandler.GetAll).Methods("GET")
-	router.HandleFunc("/delete/{name}", params.RecordsHandler.DeleteByName).Methods("DELETE")
-	router.HandleFunc("/update/{name}", params.RecordsHandler.UpdateByName).Methods("PUT")
+	version := params.Config.Version
+	baseUrl := "/api/record/" + version
+
+	router.HandleFunc(baseUrl+"/all", params.RecordsHandler.GetAll).Methods("GET")
+	router.HandleFunc(baseUrl+"/delete/{name}", params.RecordsHandler.DeleteByName).Methods("DELETE")
+	router.HandleFunc(baseUrl+"/update/{name}", params.RecordsHandler.UpdateByName).Methods("PUT")
 
 	server := http.Server{
 		Addr:    params.Config.Port,
@@ -34,12 +38,12 @@ func NewRouter(params Params) {
 	params.Lifecycle.Append(
 		fx.Hook{
 			OnStart: func(ctx context.Context) error {
-				fmt.Println("Application started")
+				params.Logger.Debug("Application started")
 				go server.ListenAndServe()
 				return nil
 			},
 			OnStop: func(ctx context.Context) error {
-				fmt.Println("Application stopped")
+				params.Logger.Debug("Application stopped")
 				return server.Shutdown(ctx)
 			},
 		},
