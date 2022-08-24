@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"mongoDB/internal/structs"
@@ -33,6 +34,7 @@ func New(params Params) RecordsService {
 type RecordsService interface {
 	GetAll(ctx context.Context) (records []structs.Record, err error)
 	DeleteByName(ctx context.Context, name string) error
+	UpdateByName(ctx context.Context, name string, record structs.Record) (structs.Record, error)
 }
 
 func (s *service) GetAll(ctx context.Context) (records []structs.Record, err error) {
@@ -60,4 +62,25 @@ func (s *service) DeleteByName(ctx context.Context, name string) error {
 	}
 
 	return nil
+}
+
+func (s *service) UpdateByName(ctx context.Context, name string, record structs.Record) (structs.Record, error) {
+
+	filter := bson.D{primitive.E{Key: "name", Value: name}}
+
+	update := bson.D{primitive.E{Key: "$set", Value: bson.D{
+		primitive.E{Key: "status", Value: record.Status},
+	}}}
+
+	record, err := s.mongoDB.Update(ctx, filter, update)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			s.logger.Info("internal.record.Update s.mongoDB.Update", zap.Error(err))
+			return record, err
+		}
+		s.logger.Error("internal.record.Update s.mongoDB.Update", zap.Error(err))
+		return record, err
+	}
+
+	return record, nil
 }

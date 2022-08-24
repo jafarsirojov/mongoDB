@@ -24,6 +24,7 @@ func NewRouter(params Params) {
 
 	router.HandleFunc("/all", params.RecordsHandler.GetAll).Methods("GET")
 	router.HandleFunc("/delete/{name}", params.RecordsHandler.DeleteByName).Methods("DELETE")
+	router.HandleFunc("/update/{name}", params.RecordsHandler.UpdateByName).Methods("PUT")
 
 	server := http.Server{
 		Addr:    params.Config.Port,

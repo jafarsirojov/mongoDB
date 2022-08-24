@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"github.com/gorilla/mux"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
@@ -35,6 +36,7 @@ func NewHandler(params Params) RecordsHandler {
 type RecordsHandler interface {
 	GetAll(http.ResponseWriter, *http.Request)
 	DeleteByName(http.ResponseWriter, *http.Request)
+	UpdateByName(http.ResponseWriter, *http.Request)
 }
 
 func (h *handler) GetAll(w http.ResponseWriter, r *http.Request) {
@@ -83,4 +85,44 @@ func (h *handler) DeleteByName(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response = responses.Success
+}
+
+func (h *handler) UpdateByName(w http.ResponseWriter, r *http.Request) {
+
+	var (
+		response structs.Response
+		request  structs.Record
+	)
+
+	defer reply.Json(w, http.StatusOK, &response)
+
+	name := mux.Vars(r)["name"]
+	if len(strings.TrimSpace(name)) == 0 {
+		h.logger.Error("cmd.handlers.UpdateByName check 'name' params", zap.String("name", name))
+		response = responses.BadRequest
+		return
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		h.logger.Error("cmd.handlers.UpdateByName json.NewDecoder(r.Body).Decode(&request)",
+			zap.Any("request", request), zap.Any("r.Body", r.Body), zap.Error(err))
+		response = responses.BadRequest
+		return
+	}
+
+	payload, err := h.recordsService.UpdateByName(r.Context(), name, request)
+	if err != nil {
+		if err == structs.ErrNotFound {
+			h.logger.Info("cmd.handlers.UpdateByName recordsService.UpdateByName: not found")
+			response = responses.NotFound
+			return
+		}
+		h.logger.Error("cmd.handlers.UpdateByName recordsService.UpdateByName", zap.Error(err))
+		response = responses.InternalErr
+		return
+	}
+
+	response = responses.Success
+	response.Payload = payload
 }

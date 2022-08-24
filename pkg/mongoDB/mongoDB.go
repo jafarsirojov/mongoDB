@@ -3,6 +3,7 @@ package mongoDB
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"mongoDB/internal/structs"
@@ -34,6 +35,7 @@ type MongoDB interface {
 	Add(ctx context.Context, record structs.Record) error
 	GetAll(ctx context.Context, filter interface{}) (records []structs.Record, err error)
 	Delete(ctx context.Context, filter interface{}) error
+	Update(ctx context.Context, filter, update interface{}) (record structs.Record, err error)
 }
 
 func (m *mongoDB) Add(ctx context.Context, record structs.Record) error {
@@ -70,11 +72,29 @@ func (m *mongoDB) GetAll(ctx context.Context, filter interface{}) (records []str
 
 	return records, nil
 }
+
 func (m *mongoDB) Delete(ctx context.Context, filter interface{}) error {
 	_, err := collection.DeleteOne(ctx, filter)
 	if err != nil {
-		m.logger.Error("pkg.mongoDB.GetAll cur.Decode", zap.Any("filter", filter), zap.Error(err))
+		m.logger.Error("pkg.mongoDB.Delete collection.DeleteOne",
+			zap.Any("filter", filter), zap.Error(err))
 		return err
 	}
 	return nil
+}
+
+func (m *mongoDB) Update(ctx context.Context, filter, update interface{}) (record structs.Record, err error) {
+	err = collection.FindOneAndUpdate(ctx, filter, update).Decode(&record)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			m.logger.Info("pkg.mongoDB.Update collection.FindOneAndUpdate not found document",
+				zap.Any("filter", filter), zap.Any("update", update))
+			return record, structs.ErrNotFound
+		}
+		m.logger.Error("pkg.mongoDB.Update collection.FindOneAndUpdate",
+			zap.Any("filter", filter), zap.Any("update", update), zap.Error(err))
+		return record, err
+	}
+
+	return record, nil
 }
