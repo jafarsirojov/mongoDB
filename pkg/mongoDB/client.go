@@ -23,5 +23,5 @@ func initClient() {
 		log.Fatal(err)
 	}
 
-	collection = client.Database("tasker").Collection("tasks")
+	collection = client.Database("ppi").Collection("records")
 }
