@@ -10,11 +10,7 @@ import (
 	"net/http"
 )
 
-var Module = fx.Options(
-	fx.Invoke(
-		NewRouter,
-	),
-)
+var Module = fx.Invoke(NewRouter)
 
 type Params struct {
 	fx.In

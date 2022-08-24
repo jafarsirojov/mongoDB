@@ -5,14 +5,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
-	"mongoDB/pkg/config"
 )
 
 var collection *mongo.Collection
-var conf *config.Config
 
-func initClient() {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017/")
+func initClient(params Params) {
+	clientOptions := options.Client().ApplyURI(params.Config.MongoDbUrl)
 	client, err := mongo.Connect(context.Background(), clientOptions)
 	if err != nil {
 		log.Fatal(err)

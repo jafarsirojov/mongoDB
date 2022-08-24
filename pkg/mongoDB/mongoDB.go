@@ -24,7 +24,7 @@ type mongoDB struct {
 }
 
 func NewDB(params Params) MongoDB {
-	initClient()
+	initClient(params)
 	return &mongoDB{
 		logger: params.Logger,
 		config: params.Config,

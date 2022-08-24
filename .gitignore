@@ -1,0 +1,32 @@
+# IDE
+.idea
+.vscode
+__debug_bin
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Logs
+*.log
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Crash log files
+crash.log
+
+# macOS #
+.DS_Store
+
+#certs
+*.crt
+*.key
+
+notes*
