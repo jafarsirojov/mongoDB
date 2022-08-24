@@ -1,11 +1,12 @@
 package handlers
 
 import (
-	"encoding/json"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"mongoDB/internal/record"
+	"mongoDB/internal/responses"
 	"mongoDB/internal/structs"
+	"mongoDB/pkg/reply"
 	"net/http"
 )
 
@@ -34,26 +35,22 @@ type RecordsHandler interface {
 }
 
 func (h *handler) GetAll(w http.ResponseWriter, r *http.Request) {
+
+	var response structs.Response
+	defer reply.Json(w, http.StatusOK, &response)
+
 	list, err := h.recordsService.GetAll(r.Context())
 	if err != nil {
 		if err == structs.ErrNotFound {
-			h.logger.Error("cmd.handlers.GetAll recordsService.GetAll: not found")
-			w.Header().Set("Content-Type", "application/json; charset=utf-8")
-			w.WriteHeader(404)
+			h.logger.Info("cmd.handlers.GetAll recordsService.GetAll: not found")
+			response = responses.NotFound
+			return
 		}
 		h.logger.Error("cmd.handlers.GetAll recordsService.GetAll", zap.Error(err))
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		w.WriteHeader(500)
+		response = responses.InternalErr
+		return
 	}
 
-	respByte, err := json.Marshal(list)
-	if err != nil {
-		h.logger.Error("cmd.handlers.GetAll json.Marshal", zap.Any("records", list), zap.Error(err))
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		w.WriteHeader(500)
-	}
-
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(200)
-	w.Write(respByte)
+	response = responses.Success
+	response.Payload = list
 }
