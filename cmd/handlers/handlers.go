@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
-	"errors"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"mongoDB/internal/record"
+	"mongoDB/internal/structs"
 	"net/http"
 )
 
@@ -36,7 +36,7 @@ type RecordsHandler interface {
 func (h *handler) GetAll(w http.ResponseWriter, r *http.Request) {
 	list, err := h.recordsService.GetAll(r.Context())
 	if err != nil {
-		if err == errors.New("not found") {
+		if err == structs.ErrNotFound {
 			h.logger.Error("cmd.handlers.GetAll recordsService.GetAll: not found")
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			w.WriteHeader(404)

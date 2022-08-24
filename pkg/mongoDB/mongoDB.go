@@ -2,7 +2,6 @@ package mongoDB
 
 import (
 	"context"
-	"errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
@@ -65,7 +64,7 @@ func (m *mongoDB) GetAll(ctx context.Context, filter interface{}) (records []str
 	}
 
 	if len(records) == 0 {
-		return nil, errors.New("not found")
+		return nil, structs.ErrNotFound
 	}
 
 	return records, nil

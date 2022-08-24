@@ -2,7 +2,6 @@ package record
 
 import (
 	"context"
-	"errors"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"mongoDB/internal/structs"
@@ -36,7 +35,7 @@ type RecordsService interface {
 func (s *service) GetAll(ctx context.Context) (records []structs.Record, err error) {
 	records, err = s.mongoDB.GetAll(ctx, nil)
 	if err != nil {
-		if err == errors.New("not found") {
+		if err == structs.ErrNotFound {
 			s.logger.Info("internal.record.GetAll s.mongoDB.GetAll: not found")
 			return nil, err
 		}
