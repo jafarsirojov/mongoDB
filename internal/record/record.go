@@ -55,7 +55,7 @@ func (s *service) DeleteByName(ctx context.Context, name string) error {
 
 	err := s.mongoDB.Delete(ctx, filter)
 	if err != nil {
-		s.logger.Error("internal.record.DeleteByID s.mongoDB.Delete", zap.Error(err))
+		s.logger.Error("internal.record.DeleteByName s.mongoDB.Delete", zap.Error(err))
 		return err
 	}
 
