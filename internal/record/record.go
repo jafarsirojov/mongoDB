@@ -42,11 +42,12 @@ func New(params Params) RecordsService {
 type RecordsService interface {
 	GetAll(ctx context.Context) (records []structs.Record, err error)
 	DeleteByName(ctx context.Context, name string) error
-	UpdateByName(ctx context.Context, name string, record structs.Record)  error
+	UpdateByName(ctx context.Context, name string, record structs.Record) error
 }
 
 func (s *service) GetAll(ctx context.Context) (records []structs.Record, err error) {
 
+	// This project is small and not scaled horizontally, you can do without redis
 	v, ok := s.memoryCache.Get("allRecords")
 	records, _ = v.([]structs.Record)
 	if !ok {
