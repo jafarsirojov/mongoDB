@@ -1,6 +1,6 @@
 package responses
 
-import "mongoDB/internal/structs"
+import "github.com/jafarsirojov/mongoDB/internal/structs"
 
 func newResponse(code int, message string) structs.Response {
 	return structs.Response{Code: code, Message: message}

@@ -2,10 +2,10 @@ package mongoDB
 
 import (
 	"context"
+	"github.com/jafarsirojov/mongoDB/internal/structs"
+	"github.com/jafarsirojov/mongoDB/pkg/config"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
-	"mongoDB/internal/structs"
-	"mongoDB/pkg/config"
 	"reflect"
 	"testing"
 )

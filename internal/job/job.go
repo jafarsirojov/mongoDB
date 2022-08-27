@@ -2,12 +2,12 @@ package job
 
 import (
 	"context"
+	"github.com/jafarsirojov/mongoDB/internal/structs"
+	"github.com/jafarsirojov/mongoDB/pkg/cache"
+	"github.com/jafarsirojov/mongoDB/pkg/mongoDB"
 	memoryCache "github.com/patrickmn/go-cache"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"mongoDB/internal/structs"
-	"mongoDB/pkg/cache"
-	"mongoDB/pkg/mongoDB"
 )
 
 var Module = fx.Provide(New)

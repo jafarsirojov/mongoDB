@@ -2,13 +2,13 @@ package mongoDB
 
 import (
 	"context"
+	"github.com/jafarsirojov/mongoDB/internal/structs"
+	"github.com/jafarsirojov/mongoDB/pkg/config"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"mongoDB/internal/structs"
-	"mongoDB/pkg/config"
 	"time"
 )
 

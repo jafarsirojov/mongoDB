@@ -1,11 +1,11 @@
 package pkg
 
 import (
+	"github.com/jafarsirojov/mongoDB/pkg/cache"
+	"github.com/jafarsirojov/mongoDB/pkg/config"
+	"github.com/jafarsirojov/mongoDB/pkg/logger"
+	"github.com/jafarsirojov/mongoDB/pkg/mongoDB"
 	"go.uber.org/fx"
-	"mongoDB/pkg/cache"
-	"mongoDB/pkg/config"
-	"mongoDB/pkg/logger"
-	"mongoDB/pkg/mongoDB"
 )
 
 var Module = fx.Options(

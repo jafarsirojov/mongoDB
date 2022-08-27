@@ -1,8 +1,8 @@
 package structs
 
 import (
+	"github.com/jafarsirojov/mongoDB/internal/structs/status"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"mongoDB/internal/structs/status"
 	"time"
 )
 

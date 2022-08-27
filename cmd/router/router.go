@@ -3,10 +3,10 @@ package router
 import (
 	"context"
 	"github.com/gorilla/mux"
+	"github.com/jafarsirojov/mongoDB/cmd/handlers"
+	"github.com/jafarsirojov/mongoDB/pkg/config"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"mongoDB/cmd/handlers"
-	"mongoDB/pkg/config"
 	"net/http"
 )
 

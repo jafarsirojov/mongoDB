@@ -1,11 +1,11 @@
 package job
 
 import (
+	"github.com/jafarsirojov/mongoDB/internal/job"
+	"github.com/jafarsirojov/mongoDB/pkg/config"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"log"
-	"mongoDB/internal/job"
-	"mongoDB/pkg/config"
 	"sync/atomic"
 	"time"
 )

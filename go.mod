@@ -1,4 +1,4 @@
-module mongoDB
+module github.com/jafarsirojov/mongoDB
 
 go 1.15
 

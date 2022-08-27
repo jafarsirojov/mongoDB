@@ -1,10 +1,10 @@
 package cache
 
 import (
+	"github.com/jafarsirojov/mongoDB/pkg/config"
 	memoryCache "github.com/patrickmn/go-cache"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"mongoDB/pkg/config"
 	"time"
 )
 

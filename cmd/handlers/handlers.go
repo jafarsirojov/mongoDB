@@ -3,13 +3,13 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/jafarsirojov/mongoDB/internal/record"
+	"github.com/jafarsirojov/mongoDB/internal/responses"
+	"github.com/jafarsirojov/mongoDB/internal/structs"
+	"github.com/jafarsirojov/mongoDB/pkg/reply"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"mongoDB/internal/record"
-	"mongoDB/internal/responses"
-	"mongoDB/internal/structs"
-	"mongoDB/pkg/reply"
 	"net/http"
 )
 

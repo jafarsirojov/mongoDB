@@ -1,12 +1,12 @@
 package main
 
 import (
+	"github.com/jafarsirojov/mongoDB/cmd/handlers"
+	"github.com/jafarsirojov/mongoDB/cmd/job"
+	"github.com/jafarsirojov/mongoDB/cmd/router"
+	"github.com/jafarsirojov/mongoDB/internal"
+	"github.com/jafarsirojov/mongoDB/pkg"
 	"go.uber.org/fx"
-	"mongoDB/cmd/handlers"
-	"mongoDB/cmd/job"
-	"mongoDB/cmd/router"
-	"mongoDB/internal"
-	"mongoDB/pkg"
 )
 
 func main() {

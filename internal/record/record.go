@@ -2,15 +2,15 @@ package record
 
 import (
 	"context"
+	"github.com/jafarsirojov/mongoDB/internal/job"
+	"github.com/jafarsirojov/mongoDB/internal/structs"
+	"github.com/jafarsirojov/mongoDB/pkg/cache"
+	"github.com/jafarsirojov/mongoDB/pkg/mongoDB"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"mongoDB/internal/job"
-	"mongoDB/internal/structs"
-	"mongoDB/pkg/cache"
-	"mongoDB/pkg/mongoDB"
 	"time"
 )
 
