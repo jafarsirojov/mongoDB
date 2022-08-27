@@ -42,8 +42,8 @@ func New(params Params) RecordsService {
 
 type RecordsService interface {
 	GetAll(ctx context.Context) (records []structs.Record, err error)
-	DeleteByName(ctx context.Context, name string) error
-	UpdateByName(ctx context.Context, name string, record structs.Record) error
+	DeleteByID(ctx context.Context, id primitive.ObjectID) error
+	UpdateByID(ctx context.Context, id primitive.ObjectID, record structs.Record) error
 }
 
 func (s *service) GetAll(ctx context.Context) (records []structs.Record, err error) {
@@ -68,13 +68,13 @@ func (s *service) GetAll(ctx context.Context) (records []structs.Record, err err
 	return records, nil
 }
 
-func (s *service) DeleteByName(ctx context.Context, name string) error {
+func (s *service) DeleteByID(ctx context.Context, id primitive.ObjectID) error {
 
-	filter := bson.D{primitive.E{Key: "name", Value: name}}
+	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 
 	err := s.mongoDB.Delete(ctx, filter)
 	if err != nil {
-		s.logger.Error("internal.record.DeleteByName s.mongoDB.Delete", zap.Error(err))
+		s.logger.Error("internal.record.DeleteByID s.mongoDB.Delete", zap.Error(err))
 		return err
 	}
 
@@ -83,9 +83,9 @@ func (s *service) DeleteByName(ctx context.Context, name string) error {
 	return nil
 }
 
-func (s *service) UpdateByName(ctx context.Context, name string, record structs.Record) error {
+func (s *service) UpdateByID(ctx context.Context, id primitive.ObjectID, record structs.Record) error {
 
-	filter := bson.D{{Key: "_id", Value: name}}
+	filter := bson.D{{Key: "_id", Value: id}}
 
 	update := bson.D{
 		{Key: "$set", Value: bson.D{{Key: "name", Value: record.Name}}},
@@ -97,10 +97,10 @@ func (s *service) UpdateByName(ctx context.Context, name string, record structs.
 	err := s.mongoDB.Update(ctx, filter, update)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			s.logger.Info("internal.record.Update s.mongoDB.Update", zap.Error(err))
+			s.logger.Info("internal.record.UpdateByID s.mongoDB.Update", zap.Error(err))
 			return err
 		}
-		s.logger.Error("internal.record.Update s.mongoDB.Update", zap.Error(err))
+		s.logger.Error("internal.record.UpdateByID s.mongoDB.Update", zap.Error(err))
 		return err
 	}
 

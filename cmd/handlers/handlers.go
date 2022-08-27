@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"mongoDB/internal/record"
@@ -10,7 +11,6 @@ import (
 	"mongoDB/internal/structs"
 	"mongoDB/pkg/reply"
 	"net/http"
-	"strings"
 )
 
 var Module = fx.Provide(NewHandler)
@@ -35,8 +35,8 @@ func NewHandler(params Params) RecordsHandler {
 
 type RecordsHandler interface {
 	GetAll(http.ResponseWriter, *http.Request)
-	DeleteByName(http.ResponseWriter, *http.Request)
-	UpdateByName(http.ResponseWriter, *http.Request)
+	DeleteByID(http.ResponseWriter, *http.Request)
+	UpdateByID(http.ResponseWriter, *http.Request)
 }
 
 func (h *handler) GetAll(w http.ResponseWriter, r *http.Request) {
@@ -60,26 +60,27 @@ func (h *handler) GetAll(w http.ResponseWriter, r *http.Request) {
 	response.Payload = list
 }
 
-func (h *handler) DeleteByName(w http.ResponseWriter, r *http.Request) {
+func (h *handler) DeleteByID(w http.ResponseWriter, r *http.Request) {
 
 	var response structs.Response
 	defer reply.Json(w, http.StatusOK, &response)
 
-	name := mux.Vars(r)["name"]
-	if len(strings.TrimSpace(name)) == 0 {
-		h.logger.Error("cmd.handlers.DeleteByName check 'name' params", zap.String("name", name))
+	id, err := primitive.ObjectIDFromHex(mux.Vars(r)["id"])
+	if err != nil {
+		h.logger.Error("cmd.handlers.DeleteByName primitive.ObjectIDFromHex: check 'id' params",
+			zap.String("id", mux.Vars(r)["id"]), zap.Error(err))
 		response = responses.BadRequest
 		return
 	}
 
-	err := h.recordsService.DeleteByName(r.Context(), name)
+	err = h.recordsService.DeleteByID(r.Context(), id)
 	if err != nil {
 		if err == structs.ErrNotFound {
-			h.logger.Info("cmd.handlers.DeleteByID recordsService.DeleteByName: not found")
+			h.logger.Info("cmd.handlers.DeleteByID recordsService.DeleteByID: not found")
 			response = responses.NotFound
 			return
 		}
-		h.logger.Error("cmd.handlers.DeleteByID recordsService.DeleteByName", zap.Error(err))
+		h.logger.Error("cmd.handlers.DeleteByID recordsService.DeleteByID", zap.Error(err))
 		response = responses.InternalErr
 		return
 	}
@@ -87,7 +88,7 @@ func (h *handler) DeleteByName(w http.ResponseWriter, r *http.Request) {
 	response = responses.Success
 }
 
-func (h *handler) UpdateByName(w http.ResponseWriter, r *http.Request) {
+func (h *handler) UpdateByID(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		response structs.Response
@@ -96,29 +97,30 @@ func (h *handler) UpdateByName(w http.ResponseWriter, r *http.Request) {
 
 	defer reply.Json(w, http.StatusOK, &response)
 
-	name := mux.Vars(r)["name"]
-	if len(strings.TrimSpace(name)) == 0 {
-		h.logger.Error("cmd.handlers.UpdateByName check 'name' params", zap.String("name", name))
+	id, err := primitive.ObjectIDFromHex(mux.Vars(r)["id"])
+	if err != nil {
+		h.logger.Error("cmd.handlers.UpdateByID primitive.ObjectIDFromHex: check 'id' params",
+			zap.String("id", mux.Vars(r)["id"]), zap.Error(err))
 		response = responses.BadRequest
 		return
 	}
 
-	err := json.NewDecoder(r.Body).Decode(&request)
+	err = json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		h.logger.Error("cmd.handlers.UpdateByName json.NewDecoder(r.Body).Decode(&request)",
+		h.logger.Error("cmd.handlers.UpdateByID json.NewDecoder(r.Body).Decode(&request)",
 			zap.Any("request", request), zap.Any("r.Body", r.Body), zap.Error(err))
 		response = responses.BadRequest
 		return
 	}
 
-	err = h.recordsService.UpdateByName(r.Context(), name, request)
+	err = h.recordsService.UpdateByID(r.Context(), id, request)
 	if err != nil {
 		if err == structs.ErrNotFound {
-			h.logger.Info("cmd.handlers.UpdateByName recordsService.UpdateByName: not found")
+			h.logger.Info("cmd.handlers.UpdateByID recordsService.UpdateByID: not found")
 			response = responses.NotFound
 			return
 		}
-		h.logger.Error("cmd.handlers.UpdateByName recordsService.UpdateByName", zap.Error(err))
+		h.logger.Error("cmd.handlers.UpdateByID recordsService.UpdateByID", zap.Error(err))
 		response = responses.InternalErr
 		return
 	}

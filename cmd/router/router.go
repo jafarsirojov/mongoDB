@@ -27,8 +27,8 @@ func NewRouter(params Params) {
 	baseUrl := "/api/record/" + version
 
 	router.HandleFunc(baseUrl+"/all", params.RecordsHandler.GetAll).Methods("GET")
-	router.HandleFunc(baseUrl+"/delete/{name}", params.RecordsHandler.DeleteByName).Methods("DELETE")
-	router.HandleFunc(baseUrl+"/update/{name}", params.RecordsHandler.UpdateByName).Methods("PUT")
+	router.HandleFunc(baseUrl+"/delete/{id}", params.RecordsHandler.DeleteByID).Methods("DELETE")
+	router.HandleFunc(baseUrl+"/update/{id}", params.RecordsHandler.UpdateByID).Methods("PUT")
 
 	server := http.Server{
 		Addr:    params.Config.Port,
