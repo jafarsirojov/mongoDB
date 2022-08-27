@@ -3,11 +3,13 @@ package mongoDB
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"mongoDB/internal/structs"
 	"mongoDB/pkg/config"
+	"time"
 )
 
 var Module = fx.Provide(NewDB)
@@ -39,6 +41,9 @@ type MongoDB interface {
 }
 
 func (m *mongoDB) Add(ctx context.Context, record structs.Record) error {
+	record.ID = primitive.NewObjectID()
+	record.CreatedAt = time.Now()
+	record.UpdatedAt = time.Now()
 	_, err := collection.InsertOne(ctx, record)
 	return err
 }

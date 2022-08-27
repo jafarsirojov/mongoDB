@@ -22,6 +22,7 @@ type cache struct {
 	memory *memoryCache.Cache
 }
 
+// This project is small and not scaled horizontally, you can do without redis
 type MemoryCache interface {
 	Set(key string, data interface{}, d time.Duration)
 	Get(key string) (interface{}, bool)

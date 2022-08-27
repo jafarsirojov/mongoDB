@@ -7,10 +7,10 @@ import (
 )
 
 type Record struct {
-	ID        primitive.ObjectID `bson:"id"`
-	Name      string             `bson:"name"`
-	Text      string             `bson:"text"`
-	Status    status.Status      `bson:"status"`
-	CreatedAt time.Time          `bson:"createdAt"`
-	UpdatedAt time.Time          `bson:"updatedAt"`
+	ID        primitive.ObjectID `bson:"_id" json:"id"`
+	Name      string             `bson:"name" json:"name"`
+	Text      string             `bson:"text" json:"text"`
+	Status    status.Status      `bson:"status" json:"status"`
+	CreatedAt time.Time          `bson:"createdAt" json:"createdAt"`
+	UpdatedAt time.Time          `bson:"updatedAt" json:"updatedAt"`
 }

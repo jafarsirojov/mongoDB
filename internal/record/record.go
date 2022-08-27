@@ -11,6 +11,7 @@ import (
 	"mongoDB/internal/structs"
 	"mongoDB/pkg/cache"
 	"mongoDB/pkg/mongoDB"
+	"time"
 )
 
 var Module = fx.Provide(New)
@@ -84,11 +85,14 @@ func (s *service) DeleteByName(ctx context.Context, name string) error {
 
 func (s *service) UpdateByName(ctx context.Context, name string, record structs.Record) error {
 
-	filter := bson.D{primitive.E{Key: "name", Value: name}}
+	filter := bson.D{{Key: "_id", Value: name}}
 
-	update := bson.D{primitive.E{Key: "$set", Value: bson.D{
-		primitive.E{Key: "status", Value: record.Status},
-	}}}
+	update := bson.D{
+		{Key: "$set", Value: bson.D{{Key: "name", Value: record.Name}}},
+		{Key: "$set", Value: bson.D{{Key: "status", Value: record.Status}}},
+		{Key: "$set", Value: bson.D{{Key: "text", Value: record.Text}}},
+		{Key: "$set", Value: bson.D{{Key: "updatedAt", Value: time.Now()}}},
+	}
 
 	err := s.mongoDB.Update(ctx, filter, update)
 	if err != nil {
