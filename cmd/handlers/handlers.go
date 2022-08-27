@@ -111,7 +111,7 @@ func (h *handler) UpdateByName(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	payload, err := h.recordsService.UpdateByName(r.Context(), name, request)
+	err = h.recordsService.UpdateByName(r.Context(), name, request)
 	if err != nil {
 		if err == structs.ErrNotFound {
 			h.logger.Info("cmd.handlers.UpdateByName recordsService.UpdateByName: not found")
@@ -124,5 +124,4 @@ func (h *handler) UpdateByName(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response = responses.Success
-	response.Payload = payload
 }

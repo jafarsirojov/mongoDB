@@ -35,7 +35,7 @@ type MongoDB interface {
 	Add(ctx context.Context, record structs.Record) error
 	GetAll(ctx context.Context, filter interface{}) (records []structs.Record, err error)
 	Delete(ctx context.Context, filter interface{}) error
-	Update(ctx context.Context, filter, update interface{}) (record structs.Record, err error)
+	Update(ctx context.Context, filter, update interface{}) error
 }
 
 func (m *mongoDB) Add(ctx context.Context, record structs.Record) error {
@@ -83,18 +83,18 @@ func (m *mongoDB) Delete(ctx context.Context, filter interface{}) error {
 	return nil
 }
 
-func (m *mongoDB) Update(ctx context.Context, filter, update interface{}) (record structs.Record, err error) {
-	err = collection.FindOneAndUpdate(ctx, filter, update).Decode(&record)
+func (m *mongoDB) Update(ctx context.Context, filter, update interface{}) error {
+	err := collection.FindOneAndUpdate(ctx, filter, update).Err()
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			m.logger.Info("pkg.mongoDB.Update collection.FindOneAndUpdate not found document",
 				zap.Any("filter", filter), zap.Any("update", update))
-			return record, structs.ErrNotFound
+			return structs.ErrNotFound
 		}
 		m.logger.Error("pkg.mongoDB.Update collection.FindOneAndUpdate",
 			zap.Any("filter", filter), zap.Any("update", update), zap.Error(err))
-		return record, err
+		return err
 	}
 
-	return record, nil
+	return nil
 }
