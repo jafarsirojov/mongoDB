@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  mongo:
+    image: 'mongo:3.4.1'
+    ports:
+      - '27017:27017'
+    volumes:
+      - 'mongo:/data/db'
+
+  puma:
+    tty: true
+    stdin_open: true
+    depends_on:
+      - 'mongo'
+    build:
+      context: .
+      dockerfile: Dockerfile.puma
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    ports:
+      - '3000:3000'
+    volumes:
+      - '.:/app'
+    environment:
+      - SECRET_KEY_BASE=secret
+      - MONGO_URL=mongodb://mongo:27017/app_development
+volumes:
+  mongo:
