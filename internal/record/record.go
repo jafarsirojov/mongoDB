@@ -8,7 +8,6 @@ import (
 	"github.com/jafarsirojov/mongoDB/pkg/mongoDB"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"time"
@@ -96,7 +95,7 @@ func (s *service) UpdateByID(ctx context.Context, id primitive.ObjectID, record 
 
 	err := s.mongoDB.Update(ctx, filter, update)
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
+		if err == structs.ErrNotFound {
 			s.logger.Info("internal.record.UpdateByID s.mongoDB.Update", zap.Error(err))
 			return err
 		}

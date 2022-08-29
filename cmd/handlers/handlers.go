@@ -75,11 +75,6 @@ func (h *handler) DeleteByID(w http.ResponseWriter, r *http.Request) {
 
 	err = h.recordsService.DeleteByID(r.Context(), id)
 	if err != nil {
-		if err == structs.ErrNotFound {
-			h.logger.Info("cmd.handlers.DeleteByID recordsService.DeleteByID: not found")
-			response = responses.NotFound
-			return
-		}
 		h.logger.Error("cmd.handlers.DeleteByID recordsService.DeleteByID", zap.Error(err))
 		response = responses.InternalErr
 		return
