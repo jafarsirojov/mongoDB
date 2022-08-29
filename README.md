@@ -5,7 +5,7 @@
 ## Frameworks
 - [UberFX micro framework](https://godoc.org/go.uber.org/fx) - DI framework.
 - [gorilla/mux](https://github.com/gorilla/mux) - Gorilla MUX.
-- [go-cache](github.com/patrickmn/go-cache) - In-memory key:value cache.
+- [go-cache](https://pkg.go.dev/github.com/patrickmn/go-cache) - In-memory key:value cache.
 - [UberZAP logging](https://godoc.org/go.uber.org/zap) - Blazing fast, structured, leveled logging in Go.
 
 
