@@ -12,7 +12,7 @@
 ## API
 
 ### Get all records
-{api_address}:7777/api/record/1/all
+{api_address}:7777/api/record/v1/all
 
 Method: GET
 
@@ -71,7 +71,7 @@ Responses:
 
 
 ### Update record
-{api_address}:7777/api/record/1/update/{id}
+{api_address}:7777/api/record/v1/update/{id}
 
 Method: PUT
 
@@ -123,7 +123,7 @@ Responses:
 
 
 ### Delete record
-{api_address}:7777/api/record/1/delete/{id}
+{api_address}:7777/api/record/v1/delete/{id}
 
 Method: DELETE
 

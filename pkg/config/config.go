@@ -49,7 +49,7 @@ func ProvideConfig() *Config {
 	return &Config{
 		MongoDbUrl:                getEnv("MONGO_DB_URL", "mongodb://localhost:27017/"),
 		Port:                      getEnv("PORT", ":7777"),
-		Version:                   getEnv("VERSION", "1"),
+		Version:                   getEnv("VERSION", "v1"),
 		ResetRecordsCacheDuration: getEnvDuration("RESET_RECORDS_CACHE_DURATION", time.Second),
 	}
 }
